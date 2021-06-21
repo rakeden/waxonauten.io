@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-col cols="4" sm="4" md="4">
+    <v-col cols="12" sm="4" md="4">
       <v-card class="elevation-0" :loading="assetsLoading">
         <v-card-title>
           <h2 class="text-h5">
@@ -47,7 +47,7 @@
     </v-col>
     <v-col
       v-if="snakingAssets"
-      cols="8"
+      cols="12"
       sm="8"
       md="8"
     >
