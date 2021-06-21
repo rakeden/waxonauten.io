@@ -58,7 +58,7 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Novarally 🐍',
+          title: 'novarallywax 🐍',
           to: '/'
         },
       ],
