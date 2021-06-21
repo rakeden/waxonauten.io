@@ -149,7 +149,7 @@ export default {
   },
   data() {
     return {
-      walletId: 'rakedenxriva',
+      walletId: 'novarallywax',
       snakingAssets: null,
       totalSnaking: null,
       assetsLoading: false,
