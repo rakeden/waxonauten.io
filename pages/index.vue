@@ -236,7 +236,7 @@ export default {
 
       this.assetsLoading = true
 
-      const url = encodeURI(`https://wax.api.atomicassets.io/atomicassets/v1/assets?page=1&limit=100000&owner=${encodeURIComponent(this.walletId).replace(/\./g, '%2E')}&collection_name=novarallywax`)
+      const url = encodeURI(`https://wax.api.atomicassets.io/atomicassets/v1/assets?page=1&limit=100000&owner=${this.walletId}&collection_name=novarallywax`)
 
       axios.get(url)
         .then(({data}) => {
