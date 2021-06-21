@@ -66,7 +66,7 @@
           <v-row>
             <v-col cols="12">
               <v-row>
-                <v-col cols="6">
+                <v-col cols="12" sm="12" md="6">
                   <h3 class="text-h5 mt-5">Asset Overview</h3>
                   <v-data-table
                     :headers="overviewTableHeaders"
@@ -76,27 +76,17 @@
                   </v-data-table>
                 </v-col>
 
-                <v-col cols="6">
+                <!--v-col cols="12" sm="12" md="6">
                   <h3 class="text-h5 mt-5">Vehicle-Drivers-Ratio</h3>
 
                   <VueApexCharts
                     :options="ratioOptions"
                     :series="ratioRows"
                   ></VueApexCharts>
-                </v-col>
+                </v-col-->
               </v-row>
             </v-col>
-            <v-col cols="6">
-              <h3 class="text-h5 mt-5">👾 Drivers - <strong>{{ totalSnakingByEntity('drivers') }}</strong></h3>
-              <v-data-table
-                :headers="driversTableHeaders"
-                :items="driversTableRows"
-                :hide-default-footer="true"
-              >
-              </v-data-table>
-            </v-col>
-
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <h3 class="text-h5 mt-5">🚗  Vehicles - <strong>{{ totalSnakingByEntity('vehicles') }}</strong></h3>
 
               <v-data-table
@@ -106,7 +96,7 @@
               >
               </v-data-table>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
               <h3 class="text-h5 mt-5">Vehicle Rarities</h3>
 
               <VueApexCharts
@@ -114,7 +104,16 @@
                 :series="vehiclesRaritiesRatio"
               ></VueApexCharts>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" md="6">
+              <h3 class="text-h5 mt-5">👾 Drivers - <strong>{{ totalSnakingByEntity('drivers') }}</strong></h3>
+              <v-data-table
+                :headers="driversTableHeaders"
+                :items="driversTableRows"
+                :hide-default-footer="true"
+              >
+              </v-data-table>
+            </v-col>
+            <v-col cols="12" md="6">
               <h3 class="text-h5 mt-5">Drivers Rarities</h3>
 
               <VueApexCharts
