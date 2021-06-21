@@ -9,9 +9,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "apexcharts": "^3.27.1",
     "axios": "^0.21.1",
     "core-js": "^3.9.1",
-    "nuxt": "^2.15.3"
+    "nuxt": "^2.15.3",
+    "vue-apexcharts": "^1.6.1"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3"

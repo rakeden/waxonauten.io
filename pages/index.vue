@@ -10,6 +10,7 @@
         <v-card-text>
           <p class="d-block caption">
             Unofficial community tool made with &lt;3 and nuxt.js
+            Read the <a href="https://www.notion.so/Nova-Rally-Whitepaper-4f3956cb4edf404ea10a8a1f94dfb507" target="_blank">Whitepaper</a>
           </p>
 
           <v-text-field
@@ -54,7 +55,7 @@
       <v-card class="elevation-0">
         <v-card-title>
           <h2 class="text-h5">
-            Snaking Power: <strong>{{ totalSnaking.toLocaleString() }}</strong> 🐍
+            Snaking Power: <strong>{{ totalSnaking.toLocaleString() }}</strong> 🏁 🐍
           </h2>
         </v-card-title>
         <v-card-text>
@@ -62,34 +63,66 @@
             Below find your snaking value and more details.
           </p>
 
-          <h3>Asset Overview</h3>
+          <v-row>
+            <v-col cols="12">
+              <v-row>
+                <v-col cols="6">
+                  <h3 class="text-h5 mt-5">Asset Overview</h3>
+                  <v-data-table
+                    :headers="overviewTableHeaders"
+                    :items="overviewTableRows"
+                    :hide-default-footer="true"
+                  >
+                  </v-data-table>
+                </v-col>
 
-          <v-data-table
-            :headers="overviewTableHeaders"
-            :items="overviewTableRows"
-            :hide-default-footer="true"
-          >
-          </v-data-table>
+                <v-col cols="6">
+                  <h3 class="text-h5 mt-5">Vehicle-Drivers-Ratio</h3>
 
+                  <VueApexCharts
+                    :options="ratioOptions"
+                    :series="ratioRows"
+                  ></VueApexCharts>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="6">
+              <h3 class="text-h5 mt-5">👾 Drivers - <strong>{{ totalSnakingByEntity('drivers') }}</strong></h3>
+              <v-data-table
+                :headers="driversTableHeaders"
+                :items="driversTableRows"
+                :hide-default-footer="true"
+              >
+              </v-data-table>
+            </v-col>
 
-          <h3 class="mt-5">Drivers Overview ({{ totalSnakingByEntity('drivers') }})</h3>
+            <v-col cols="6">
+              <h3 class="text-h5 mt-5">🚗  Vehicles - <strong>{{ totalSnakingByEntity('vehicles') }}</strong></h3>
 
-          <v-data-table
-            :headers="driversTableHeaders"
-            :items="driversTableRows"
-            :hide-default-footer="true"
-          >
-          </v-data-table>
+              <v-data-table
+                :headers="vehiclesTableHeaders"
+                :items="vehiclesTableRows"
+                :hide-default-footer="true"
+              >
+              </v-data-table>
+            </v-col>
+            <v-col cols="6">
+              <h3 class="text-h5 mt-5">Vehicle Rarities</h3>
 
+              <VueApexCharts
+                :options="vehiclesRaritiesOptions"
+                :series="vehiclesRaritiesRatio"
+              ></VueApexCharts>
+            </v-col>
+            <v-col cols="6">
+              <h3 class="text-h5 mt-5">Drivers Rarities</h3>
 
-          <h3 class="mt-5">Vehicles Overview ({{ totalSnakingByEntity('vehicles') }})</h3>
-
-          <v-data-table
-            :headers="vehiclesTableHeaders"
-            :items="vehiclesTableRows"
-            :hide-default-footer="true"
-          >
-          </v-data-table>
+              <VueApexCharts
+                :options="driversRaritiesOptions"
+                :series="driversRaritiesRatio"
+              ></VueApexCharts>
+            </v-col>
+          </v-row>
 
         </v-card-text>
         <v-card-actions>
@@ -112,12 +145,17 @@ const RARITYVALUE = {
 }
 
 export default {
+  components: {
+    VueApexCharts: () => import('vue-apexcharts')
+  },
   data() {
     return {
       walletId: 'rakedenxriva',
       snakingAssets: null,
       totalSnaking: null,
       assetsLoading: false,
+
+      series: [44, 55, 13, 43, 22],
     }
   },
   watch: {
@@ -178,7 +216,6 @@ export default {
           .filter(asset => asset.schema.schema_name === 'drivers')
 
       return rarities.map(rarity => {
-        console.log(rarity)
         return {
           rarity,
           count: allDrivers ? allDrivers.filter(asset => asset.data.Rarity === rarity).length : 0,
@@ -214,7 +251,6 @@ export default {
           .filter(asset => asset.schema.schema_name === 'vehicles')
 
       return rarities.map(rarity => {
-        console.log(rarity)
         return {
           rarity,
           count: allVehicles ? allVehicles.filter(asset => asset.data.Rarity === rarity).length : 0,
@@ -228,6 +264,124 @@ export default {
         }
       })
     },
+    ratioOptions() {
+      return {
+        chart: {
+          width: 380,
+          type: 'pie',
+        },
+        stroke: {
+          show: false,
+          width:0
+        },
+        colors: ['#BDC3C7', '#3498DB', '#27AE60', '#E74C3C', '#EA4C88'],
+        labels: ['Vehicles', 'Drivers'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      }
+    },
+    ratioRows() {
+      const total = this.getTotalSnakingAssets();
+
+      if(!total)
+        return [0, 0]
+
+      return [
+        this.getTotalVehicles(),
+        this.getTotalDrivers()
+      ];
+    },
+    vehiclesRaritiesOptions() {
+      return {
+        chart: {
+          width: 380,
+          type: 'pie',
+        },
+        stroke: {
+          show: false,
+          width:0
+        },
+        colors: ['#BDC3C7', '#3498DB', '#27AE60', '#E74C3C', '#EA4C88'],
+        labels: Object.keys(RARITYVALUE),
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      }
+    },
+    vehiclesRaritiesRatio() {
+      const allRelevantAssets = this.snakingAssets.filter(asset => asset.schema.schema_name === 'vehicles');
+
+      const total = this.getTotalSnakingAssets();
+
+      if(!total)
+        return [0, 0, 0, 0, 0]
+
+      return [
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Common').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Uncommon').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Rare').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Classic').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Sketch').length,
+      ]
+    },
+    driversRaritiesOptions() {
+      return {
+        chart: {
+          width: 380,
+          type: 'pie',
+        },
+        stroke: {
+          show: false,
+          width:0
+        },
+        colors: ['#BDC3C7', '#3498DB', '#27AE60', '#E74C3C', '#EA4C88'],
+        labels: Object.keys(RARITYVALUE),
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom'
+            },
+          }
+        }]
+      }
+    },
+    driversRaritiesRatio() {
+      const allRelevantAssets = this.snakingAssets.filter(asset => asset.schema.schema_name === 'drivers');
+
+      const total = this.getTotalSnakingAssets();
+
+      if(!total)
+        return [0, 0, 0, 0, 0]
+
+      return [
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Common').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Uncommon').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Rare').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Classic').length,
+        allRelevantAssets.filter(asset => asset.data.Rarity === 'Sketch').length,
+      ]
+    },
   },
   methods: {
     fetchSnaking() {
@@ -236,7 +390,7 @@ export default {
 
       this.assetsLoading = true
 
-      const url = encodeURI(`https://wax.api.atomicassets.io/atomicassets/v1/assets?page=1&limit=100000&owner=${this.walletId}&collection_name=novarallywax`)
+      const url = encodeURI(`https://wax.api.atomicassets.io/atomicassets/v1/assets?page=1&limit=9999&owner=${this.walletId}&collection_name=novarallywax`)
 
       axios.get(url)
         .then(({data}) => {
@@ -261,6 +415,9 @@ export default {
         .filter(asset => asset !== undefined)
         .reduce((a, b) => (a + b), 0)
         .toLocaleString()
+    },
+    getTotalSnakingAssets() {
+        return this.snakingAssets.filter(asset => asset.schema.schema_name !== 'packs').length || 0
     },
     getTotalDrivers() {
         return this.snakingAssets.filter(asset => asset.schema.schema_name === 'drivers').length || 0
